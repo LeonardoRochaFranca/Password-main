@@ -1,2 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System;
+
+namespace Password_Main
+{
+    public class Program
+    {
+        private static void Main(string[] args)
+        {
+
+        }
+    }
+}
