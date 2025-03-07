@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Dynamic;
 
 public class Password
 {
@@ -70,7 +68,7 @@ public class Password
     }
     public int[] PopulateListPassword()
     {
-        var PasswordRequiresList = new int[MinCharacters];
+        var passwordRequiresList = new int[MinCharacters];
         var random = new Random();
         bool hasTwo = false;
         bool hasThree = false;
@@ -79,42 +77,42 @@ public class Password
         {
             for (int i = 0; i < MinCharacters; i++)
             {
-                PasswordRequiresList[i] = 0;
+                passwordRequiresList[i] = 0;
             }
         }
         else if (!IsJustNumeric && IsUpperCaseRequired && !IsSpecialCharactersRequired)
         {
             for (int i = 0; i < MinCharacters; i++)
             {
-                PasswordRequiresList[i] = random.Next(0, 3);
-                if (PasswordRequiresList[i] == 2)
+                passwordRequiresList[i] = random.Next(0, 3);
+                if (passwordRequiresList[i] == 2)
                     hasTwo = true;
             }
 
             if (!hasTwo)
-                PasswordRequiresList[random.Next(0, MinCharacters)] = 2;
+                passwordRequiresList[random.Next(0, MinCharacters)] = 2;
         }
         else if (!IsJustNumeric && !IsUpperCaseRequired && IsSpecialCharactersRequired)
         {
             for (int i = 0; i < MinCharacters; i++)
             {
-                PasswordRequiresList[i] = random.Next(0, 4);
-                if (PasswordRequiresList[i] == 2)
-                    PasswordRequiresList[random.Next(0, MinCharacters)] = 1;
-                else if (PasswordRequiresList[i] == 3)
+                passwordRequiresList[i] = random.Next(0, 4);
+                if (passwordRequiresList[i] == 2)
+                    passwordRequiresList[random.Next(0, MinCharacters)] = 1;
+                else if (passwordRequiresList[i] == 3)
                     hasThree = true;
             }
             if (!hasThree)
-                PasswordRequiresList[random.Next(0, MinCharacters)] = 3;
+                passwordRequiresList[random.Next(0, MinCharacters)] = 3;
         }
         else if (!IsJustNumeric && IsUpperCaseRequired && IsSpecialCharactersRequired)
         {
             for (int i = 0; i < MinCharacters; i++)
             {
-                PasswordRequiresList[i] = random.Next(0, 4);
-                if (PasswordRequiresList[i] == 2)
+                passwordRequiresList[i] = random.Next(0, 4);
+                if (passwordRequiresList[i] == 2)
                     hasTwo = true;
-                else if (PasswordRequiresList[i] == 3)
+                else if (passwordRequiresList[i] == 3)
                     hasThree = true;
             }
             while (true)
@@ -122,33 +120,50 @@ public class Password
                 if (hasTwo && hasThree)
                     break;
 
-                if (!hasTwo && PasswordRequiresList[random.Next(0, MinCharacters)] != 3)
+                if (!hasTwo && passwordRequiresList[random.Next(0, MinCharacters)] != 3)
                 {
-                    PasswordRequiresList[random.Next(0, MinCharacters)] = 2;
+                    passwordRequiresList[random.Next(0, MinCharacters)] = 2;
                     hasTwo = true;
                 }
 
-                if (!hasThree && PasswordRequiresList[random.Next(0, MinCharacters)] != 2)
+                if (!hasThree && passwordRequiresList[random.Next(0, MinCharacters)] != 2)
                 {
-                    PasswordRequiresList[random.Next(0, MinCharacters)] = 3;
+                    passwordRequiresList[random.Next(0, MinCharacters)] = 3;
                     hasThree = true;
                 }
             }
         }
-        return PasswordRequiresList;
+        return passwordRequiresList;
     }
-    public void GeneratePassword()
+    public string GeneratePassword()
     {
         // 0 = numeros
         // 1 = letra
         // 2 = Maiusculo
         // 3 = Especial
-        var PasswordRequiresList = PopulateListPassword();
-        for (int i = 0; i < MinCharacters; i++)
+        var random = new Random();
+        var passwordRequiresList = PopulateListPassword();
+        var password = new List<string>();
+
+        for (int i = 0; i < passwordRequiresList.Length; i++)
         {
-
-
+            switch (passwordRequiresList[i])
+            {
+                case 0:
+                    password.Add(random.Next(0, 10).ToString());
+                    break;
+                case 1:
+                    password.Add(((char)random.Next(97, 123)).ToString());
+                    break;
+                case 2:
+                    password.Add(((char)random.Next(65, 91)).ToString());
+                    break;
+                case 3:
+                    password.Add(SpecialCharacters[random.Next(0, SpecialCharacters.Length)].ToString());
+                    break;
+            }
         }
+        return string.Concat(password);
     }
 
     public void SavePassword()
