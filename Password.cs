@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Dynamic;
 
 public class Password
@@ -7,9 +8,10 @@ public class Password
     private bool IsSpecialCharactersRequired { get; set; }
     private bool IsUpperCaseRequired { get; set; }
     private bool IsJustNumeric { get; set; }
-    private string[] SpecialCharacters = {"!", "@", "#", "$","%","&","*","?","."};
+    private string[] SpecialCharacters = { "!", "@", "#", "$", "%", "&", "*", "?", "." };
     private string PasswordName { get; set; }
-    public Password(){}
+
+    public Password() { }
 
     public async Task SetPasswordRequirements()
     {
@@ -27,8 +29,8 @@ public class Password
         Console.Write("A senha é apenas numerica? <S/N>  ");
         string isJustNumeric = Console.ReadLine().ToUpper();
         Console.Clear();
-        
-        if(isJustNumeric != "S")
+
+        if (isJustNumeric != "S")
         {
             Console.Write("É necessário caracteres especiais? <S/N> ");
             SetIsSpecialCharactersRequired(Console.ReadLine().ToUpper());
@@ -66,11 +68,83 @@ public class Password
         else
             IsSpecialCharactersRequired = false;
     }
+    public int[] PopulateListPassword()
+    {
+        var PasswordRequiresList = new int[MinCharacters];
+        var random = new Random();
+        bool hasTwo = false;
+        bool hasThree = false;
 
+        if (IsJustNumeric)
+        {
+            for (int i = 0; i < MinCharacters; i++)
+            {
+                PasswordRequiresList[i] = 0;
+            }
+        }
+        else if (!IsJustNumeric && IsUpperCaseRequired && !IsSpecialCharactersRequired)
+        {
+            for (int i = 0; i < MinCharacters; i++)
+            {
+                PasswordRequiresList[i] = random.Next(0, 3);
+                if (PasswordRequiresList[i] == 2)
+                    hasTwo = true;
+            }
+
+            if (!hasTwo)
+                PasswordRequiresList[random.Next(0, MinCharacters)] = 2;
+        }
+        else if (!IsJustNumeric && !IsUpperCaseRequired && IsSpecialCharactersRequired)
+        {
+            for (int i = 0; i < MinCharacters; i++)
+            {
+                PasswordRequiresList[i] = random.Next(0, 4);
+                if (PasswordRequiresList[i] == 2)
+                    PasswordRequiresList[random.Next(0, MinCharacters)] = 1;
+                else if (PasswordRequiresList[i] == 3)
+                    hasThree = true;
+            }
+            if (!hasThree)
+                PasswordRequiresList[random.Next(0, MinCharacters)] = 3;
+        }
+        else if (!IsJustNumeric && IsUpperCaseRequired && IsSpecialCharactersRequired)
+        {
+            for (int i = 0; i < MinCharacters; i++)
+            {
+                PasswordRequiresList[i] = random.Next(0, 4);
+                if (PasswordRequiresList[i] == 2)
+                    hasTwo = true;
+                else if (PasswordRequiresList[i] == 3)
+                    hasThree = true;
+            }
+            while (true)
+            {
+                if (hasTwo && hasThree)
+                    break;
+
+                if (!hasTwo && PasswordRequiresList[random.Next(0, MinCharacters)] != 3)
+                {
+                    PasswordRequiresList[random.Next(0, MinCharacters)] = 2;
+                    hasTwo = true;
+                }
+
+                if (!hasThree && PasswordRequiresList[random.Next(0, MinCharacters)] != 2)
+                {
+                    PasswordRequiresList[random.Next(0, MinCharacters)] = 3;
+                    hasThree = true;
+                }
+            }
+        }
+        return PasswordRequiresList;
+    }
     public void GeneratePassword()
-    {//random.Next(0, 10);
-
-        for(int i = 0; i < (MinCharacters+3); i++)
+    {
+        // 0 = numeros
+        // 1 = letra
+        // 2 = Maiusculo
+        // 3 = Especial
+        var PasswordRequiresList = PopulateListPassword();
+        for (int i = 0; i < MinCharacters; i++)
         {
 
 
