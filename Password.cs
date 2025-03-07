@@ -11,7 +11,7 @@ public class Password
 
     public Password() { }
 
-    public async Task SetPasswordRequirements()
+    public async Task<string> SetPasswordRequirements()
     {
         Console.WriteLine("Bem-vindo ao gerador de senha. Por favor, informe os requerimentos necessários:");
         Console.WriteLine(" ");
@@ -43,8 +43,10 @@ public class Password
         Console.WriteLine("Pronto!");
         await Task.Delay(3000);
         Console.Clear();
+
+        return GeneratePassword();
     }
-    public void SetIsJustNumeric(string isJustNumeric)
+    private void SetIsJustNumeric(string isJustNumeric)
     {
         if (isJustNumeric == "S")
         {
@@ -55,9 +57,9 @@ public class Password
         else
             IsJustNumeric = false;
     }
-    public void SetIsUpperCaseRequired(string isUpperCaseRequired) => IsUpperCaseRequired = isUpperCaseRequired == "S";
-    public void SetIsSpecialCharactersRequired(string isSpecialCharactersRequired) => IsSpecialCharactersRequired = isSpecialCharactersRequired == "S";
-    public int[] PopulateListPassword()
+    private void SetIsUpperCaseRequired(string isUpperCaseRequired) => IsUpperCaseRequired = isUpperCaseRequired == "S";
+    private void SetIsSpecialCharactersRequired(string isSpecialCharactersRequired) => IsSpecialCharactersRequired = isSpecialCharactersRequired == "S";
+    private int[] PopulateListPassword()
     {
         var passwordRequiresList = new int[MinCharacters];
         var random = new Random();
@@ -124,9 +126,16 @@ public class Password
                 }
             }
         }
+           else if (!IsJustNumeric && !IsUpperCaseRequired && !IsSpecialCharactersRequired)
+        {
+            for (int i = 0; i < MinCharacters; i++)
+            {
+                passwordRequiresList[i] = random.Next(0, 2);
+            }
+        }
         return passwordRequiresList;
     }
-    public string GeneratePassword()
+    private string GeneratePassword()
     {
         // 0 = numeros
         // 1 = letra
