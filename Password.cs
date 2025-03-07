@@ -1,10 +1,12 @@
 using System;
+using System.Dynamic;
 
 public class Password
 {
     private int MinCharacters { get; set; }
     private bool IsSpecialCharactersRequired { get; set; }
     private bool IsUpperCaseRequired { get; set; }
+    private bool IsJustNumeric { get; set; }
     private string[] SpecialCharacters = {"!", "@", "#", "$","%","&","*","?","."};
     private string PasswordName { get; set; }
     public Password(){}
@@ -22,17 +24,33 @@ public class Password
         MinCharacters = int.Parse(Console.ReadLine());
         Console.Clear();
 
-        Console.Write("É necessário caracteres especiais? <S/N> ");
-        SetIsSpecialCharactersRequired(Console.ReadLine().ToUpper());
+        Console.Write("A senha é apenas numerica? <S/N>  ");
+        string isJustNumeric = Console.ReadLine().ToUpper();
         Console.Clear();
+        
+        if(isJustNumeric != "S")
+        {
+            Console.Write("É necessário caracteres especiais? <S/N> ");
+            SetIsSpecialCharactersRequired(Console.ReadLine().ToUpper());
+            Console.Clear();
 
-        Console.Write("É necessário caractere maiúsculo? <S/N> ");
-        SetIsUpperCaseRequired(Console.ReadLine().ToUpper());
-        Console.Clear();
+            Console.Write("É necessário caracteres maiúsculos? <S/N> ");
+            SetIsUpperCaseRequired(Console.ReadLine().ToUpper());
+            Console.Clear();
+        }
+        else
+            SetIsJustNumeric(isJustNumeric);
 
         Console.WriteLine("Pronto!");
         await Task.Delay(3000);
         Console.Clear();
+    }
+    public void SetIsJustNumeric(string isJustNumeric)
+    {
+        if (isJustNumeric == "S")
+            IsJustNumeric = true;
+        else
+            IsJustNumeric = false;
     }
     public void SetIsUpperCaseRequired(string isUpperCaseRequired)
     {
@@ -47,5 +65,25 @@ public class Password
             IsSpecialCharactersRequired = true;
         else
             IsSpecialCharactersRequired = false;
+    }
+
+    public void GeneratePassword()
+    {//random.Next(0, 10);
+
+        for(int i = 0; i < (MinCharacters+3); i++)
+        {
+
+
+        }
+    }
+
+    public void SavePassword()
+    {
+        //Future Implementation
+    }
+
+    public void EncryptPassword()
+    {
+        //Future Implementation
     }
 }
