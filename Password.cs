@@ -6,7 +6,7 @@ public class Password
     private bool IsSpecialCharactersRequired { get; set; }
     private bool IsUpperCaseRequired { get; set; }
     private bool IsJustNumeric { get; set; }
-    private string[] SpecialCharacters = { "!", "@", "#", "$", "%", "&", "*", "?", "." };
+    private readonly string[] SpecialCharacters = { "!", "@", "#", "$", "%", "&", "*", "?", "." };
     private string PasswordName { get; set; }
 
     public Password() { }
@@ -27,8 +27,9 @@ public class Password
         Console.Write("A senha é apenas numerica? <S/N>  ");
         string isJustNumeric = Console.ReadLine().ToUpper();
         Console.Clear();
+        SetIsJustNumeric(isJustNumeric);
 
-        if (isJustNumeric != "S")
+        if (!IsJustNumeric)
         {
             Console.Write("É necessário caracteres especiais? <S/N> ");
             SetIsSpecialCharactersRequired(Console.ReadLine().ToUpper());
@@ -38,8 +39,6 @@ public class Password
             SetIsUpperCaseRequired(Console.ReadLine().ToUpper());
             Console.Clear();
         }
-        else
-            SetIsJustNumeric(isJustNumeric);
 
         Console.WriteLine("Pronto!");
         await Task.Delay(3000);
@@ -48,24 +47,16 @@ public class Password
     public void SetIsJustNumeric(string isJustNumeric)
     {
         if (isJustNumeric == "S")
+        {
             IsJustNumeric = true;
+            IsUpperCaseRequired = false;
+            IsSpecialCharactersRequired = false;
+        }
         else
             IsJustNumeric = false;
     }
-    public void SetIsUpperCaseRequired(string isUpperCaseRequired)
-    {
-        if (isUpperCaseRequired == "S")
-            IsUpperCaseRequired = true;
-        else
-            IsUpperCaseRequired = false;
-    }
-    public void SetIsSpecialCharactersRequired(string isSpecialCharactersRequired)
-    {
-        if (isSpecialCharactersRequired == "S")
-            IsSpecialCharactersRequired = true;
-        else
-            IsSpecialCharactersRequired = false;
-    }
+    public void SetIsUpperCaseRequired(string isUpperCaseRequired) => IsUpperCaseRequired = isUpperCaseRequired == "S";
+    public void SetIsSpecialCharactersRequired(string isSpecialCharactersRequired) => IsSpecialCharactersRequired = isSpecialCharactersRequired == "S";
     public int[] PopulateListPassword()
     {
         var passwordRequiresList = new int[MinCharacters];
