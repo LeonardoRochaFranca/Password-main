@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 public class Password
 {
@@ -11,7 +12,7 @@ public class Password
 
     public Password() { }
 
-    public async Task<string> SetPasswordRequirements()
+    private async Task SetPasswordRequirements()
     {
         Console.WriteLine("Bem-vindo ao gerador de senha. Por favor, informe os requerimentos necessários:");
         Console.WriteLine(" ");
@@ -43,8 +44,6 @@ public class Password
         Console.WriteLine("Pronto!");
         await Task.Delay(3000);
         Console.Clear();
-
-        return GeneratePassword();
     }
     private void SetIsJustNumeric(string isJustNumeric)
     {
@@ -135,13 +134,14 @@ public class Password
         }
         return passwordRequiresList;
     }
-    private string GeneratePassword()
+    public async Task<string> GeneratePassword()
     {
         // 0 = numeros
         // 1 = letra
         // 2 = Maiusculo
         // 3 = Especial
         var random = new Random();
+        await SetPasswordRequirements();
         var passwordRequiresList = PopulateListPassword();
         var password = new List<string>();
 

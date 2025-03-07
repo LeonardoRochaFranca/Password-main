@@ -8,7 +8,7 @@ namespace Password_Main
         private static async Task Main(string[] args)
         {
             var senha = new Password();
-            string teste = await senha.SetPasswordRequirements();
+            string teste = await senha.GeneratePassword();
             Console.WriteLine(teste);
         }
     }
