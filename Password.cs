@@ -9,6 +9,7 @@ public class Password
     private bool IsJustNumeric { get; set; }
     private readonly string[] SpecialCharacters = { "!", "@", "#", "$", "%", "&", "*", "?", "." };
     private string PasswordName { get; set; }
+    public string GeneratedPassword { get; set; }
 
     public Password() { }
 
@@ -90,7 +91,7 @@ public class Password
             {
                 passwordRequiresList[i] = random.Next(0, 4);
                 if (passwordRequiresList[i] == 2)
-                    passwordRequiresList[random.Next(0, MinCharacters)] = 1;
+                    passwordRequiresList[i] = 1;
                 else if (passwordRequiresList[i] == 3)
                     hasThree = true;
             }
@@ -125,7 +126,7 @@ public class Password
                 }
             }
         }
-           else if (!IsJustNumeric && !IsUpperCaseRequired && !IsSpecialCharactersRequired)
+        else if (!IsJustNumeric && !IsUpperCaseRequired && !IsSpecialCharactersRequired)
         {
             for (int i = 0; i < MinCharacters; i++)
             {
@@ -134,7 +135,7 @@ public class Password
         }
         return passwordRequiresList;
     }
-    public async Task<string> GeneratePassword()
+    public async Task GeneratePassword()
     {
         // 0 = numeros
         // 1 = letra
@@ -163,15 +164,43 @@ public class Password
                     break;
             }
         }
-        return string.Concat(password);
+        GeneratedPassword = string.Concat(password);
+        SavePassword(GeneratedPassword, PasswordName);
     }
 
-    public void SavePassword()
+    private void SavePassword(string GeneratedPassword, string PasswordName)
+    {
+        string projectRoot = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)?.Parent?.Parent?.Parent?.FullName;
+        string folderPath =  Path.Combine(projectRoot, "Files");
+        Directory.CreateDirectory(folderPath);
+        string filePath = Path.Combine(folderPath, $"Generateds_Password.txt");
+        try
+        {
+            string content = $"-----------------------------\n" +
+                            $"Nome da senha: {PasswordName}\n" +
+                            $"Senha gerada: {GeneratedPassword}\n" +
+                            $"-----------------------------\n";
+
+            File.AppendAllText(filePath, content);
+            Console.WriteLine($"Senha salva com sucesso em: {filePath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar a senha: {ex.Message}");
+        }
+    }
+
+    public void EncryptPassword()
     {
         //Future Implementation
     }
 
-    public void EncryptPassword()
+    public void RemovePassword()
+    {
+        //Future Implementation
+    }
+
+    public void EditPassword()
     {
         //Future Implementation
     }
